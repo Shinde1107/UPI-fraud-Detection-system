@@ -1,0 +1,14 @@
+test_id,scenario,type,input,expected_result,actual_result,status
+TC01,"Valid genuine transaction (normal amount, daytime)",Positive,"{""amount"": 500.0, ""hour"": 14, ""txn_last_24h"": 1, ""new_receiver"": 0, ""device_changed"": 0, ""location_mismatch"": 0}",Genuine,Genuine,Pass
+TC02,"Valid high-risk transaction (large amount, night, new receiver, device and location changed)",Positive,"{""amount"": 90000.0, ""hour"": 2, ""txn_last_24h"": 8, ""new_receiver"": 1, ""device_changed"": 1, ""location_mismatch"": 1}",Fraud,Fraud,Pass
+TC03,Amount is zero,Negative,"{""amount"": 0, ""hour"": 14, ""txn_last_24h"": 1, ""new_receiver"": 0, ""device_changed"": 0, ""location_mismatch"": 0}",Amount must be greater than 0,Amount must be greater than 0,Pass
+TC04,Amount is negative,Negative,"{""amount"": -100, ""hour"": 14, ""txn_last_24h"": 1, ""new_receiver"": 0, ""device_changed"": 0, ""location_mismatch"": 0}",Amount must be greater than 0,Amount must be greater than 0,Pass
+TC05,Amount field missing,Negative,"{""hour"": 14, ""txn_last_24h"": 1, ""new_receiver"": 0, ""device_changed"": 0, ""location_mismatch"": 0}",Missing field: amount,Missing field: amount,Pass
+TC06,Hour is empty (None),Negative,"{""amount"": 500.0, ""hour"": null, ""txn_last_24h"": 1, ""new_receiver"": 0, ""device_changed"": 0, ""location_mismatch"": 0}",Missing field: hour,Missing field: hour,Pass
+TC07,Hour above 23,Negative,"{""amount"": 500.0, ""hour"": 25, ""txn_last_24h"": 1, ""new_receiver"": 0, ""device_changed"": 0, ""location_mismatch"": 0}",Hour must be between 0 and 23,Hour must be between 0 and 23,Pass
+TC08,Hour below 0,Negative,"{""amount"": 500.0, ""hour"": -1, ""txn_last_24h"": 1, ""new_receiver"": 0, ""device_changed"": 0, ""location_mismatch"": 0}",Hour must be between 0 and 23,Hour must be between 0 and 23,Pass
+TC09,Amount entered as text,Negative,"{""amount"": ""abc"", ""hour"": 14, ""txn_last_24h"": 1, ""new_receiver"": 0, ""device_changed"": 0, ""location_mismatch"": 0}",Invalid type for amount,Invalid type for amount,Pass
+TC10,Flag value not 0 or 1 (new_receiver = 5),Negative,"{""amount"": 500.0, ""hour"": 14, ""txn_last_24h"": 1, ""new_receiver"": 5, ""device_changed"": 0, ""location_mismatch"": 0}",new_receiver must be 0 or 1,new_receiver must be 0 or 1,Pass
+TC11,Negative transaction count,Negative,"{""amount"": 500.0, ""hour"": 14, ""txn_last_24h"": -3, ""new_receiver"": 0, ""device_changed"": 0, ""location_mismatch"": 0}",Transaction count cannot be negative,Transaction count cannot be negative,Pass
+TC12,Boundary: hour = 0,Boundary,"{""amount"": 500.0, ""hour"": 0, ""txn_last_24h"": 1, ""new_receiver"": 0, ""device_changed"": 0, ""location_mismatch"": 0}",Genuine,Genuine,Pass
+TC13,Boundary: hour = 23,Boundary,"{""amount"": 500.0, ""hour"": 23, ""txn_last_24h"": 1, ""new_receiver"": 0, ""device_changed"": 0, ""location_mismatch"": 0}",Genuine,Genuine,Pass
